@@ -1,0 +1,14 @@
+Que. Yearly Gross Sales for Croma
+
+Ans. 
+
+SELECT 
+    get_fiscal_year(fsm.date) AS fiscal_year,
+    SUM(ROUND(fgp.gross_price * fsm.sold_quantity, 2)) AS yearly_gross_sales
+FROM dim_product AS dp
+LEFT JOIN fact_sales_monthly AS fsm USING (product_code)
+LEFT JOIN fact_gross_price AS fgp 
+    ON fgp.product_code = fsm.product_code 
+    AND fgp.fiscal_year = get_fiscal_year(fsm.date)
+WHERE fsm.customer_code = 90002002
+GROUP BY fiscal_year;
