@@ -1,0 +1,39 @@
+Que. Create View to calculate forecast accuracy for real-time update.
+
+Ans.
+
+CREATE ALGORITHM=UNDEFINED 
+DEFINER=`root`@`localhost` 
+SQL SECURITY DEFINER 
+VIEW `forecast_acc_table` AS 
+
+WITH forecast_err_table AS (
+    SELECT 
+        e.fiscal_year AS fiscal_year,
+        e.customer_code AS customer_code,
+        SUM(e.sold_quantity) AS sold_qty,
+        SUM(e.forecast_quantity) AS forecast_qty,
+        SUM(e.forecast_quantity - e.sold_quantity) AS net_err,
+        (SUM(e.forecast_quantity - e.sold_quantity) / SUM(e.forecast_quantity)) AS net_err_pct,
+        SUM(ABS(e.forecast_quantity - e.sold_quantity)) AS abs_err,
+        ((SUM(ABS(e.forecast_quantity - e.sold_quantity)) * 100) / SUM(e.forecast_quantity)) AS abs_err_pct
+    FROM fact_act_est e
+    GROUP BY e.fiscal_year, e.customer_code
+)
+
+SELECT 
+    f.fiscal_year,
+    f.customer_code,
+    f.sold_qty,
+    f.forecast_qty,
+    f.net_err,
+    f.net_err_pct,
+    f.abs_err,
+    f.abs_err_pct,
+    c.customer,
+    c.market,
+    IF(f.abs_err_pct >= 100, 0, (100 - f.abs_err_pct)) AS forecast_accuracy
+FROM forecast_err_table f
+JOIN dim_customer c 
+    ON f.customer_code = c.customer_code
+ORDER BY forecast_accuracy DESC;
