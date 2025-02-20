@@ -1,5 +1,7 @@
 Que. Determine the year-over-year change in forecast accuracy from 2020 to 2021 for each customer.
 
+Ans.
+
 WITH cte1 AS (
     SELECT 
         customer_code,
