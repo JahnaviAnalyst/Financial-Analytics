@@ -1,0 +1,18 @@
+Que. Create a store procedure to find Top N markets by Net Sales for a given year.
+
+Ans.
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `top_n_market_by_net_sales`(
+	IN_fiscal_year INT,
+    IN_top_N INT
+)
+BEGIN
+	select 
+        market,
+        round(sum(net_sales)/1000000, 2) as net_sales_mln
+	from net_sales
+    where fiscal_year = IN_fiscal_year
+    group by 1
+    order by net_sales_mln desc	
+    limit IN_top_N;
+END
