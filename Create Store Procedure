@@ -1,0 +1,17 @@
+Que. Create a store procedure to find Top N customers by Net Sales for a given year.
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `top_n_customers_by_net_sales`(
+	in_fiscal_year int,
+    in_top_n int
+)
+BEGIN
+	select 
+        customer,
+        round(sum(net_sales)/1000000, 2) as net_sales_mln
+	from net_sales
+    join dim_customer as dc using(customer_code)
+    where fiscal_year = in_fiscal_year
+    group by 1
+    order by net_sales_mln desc	
+    limit in_top_n;
+END
