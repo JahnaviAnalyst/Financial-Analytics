@@ -10,11 +10,6 @@ Que. Monthly Gross Sales Report for Croma in India for year 2021 at product leve
 
 Ans.
 
---Table Required to join to get the data
---fact_sales_monthly
---fact_gross_price
---dim_product
-
 SELECT 
     get_fiscal_quarter(date) AS fiscal_quarter,
     MONTHNAME(DATE_ADD(date, INTERVAL 4 MONTH)) AS fiscal_month,
