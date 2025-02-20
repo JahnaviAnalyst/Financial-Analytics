@@ -1,0 +1,33 @@
+Que. Monthly Gross Sales Report for Croma in India for year 2021 at product level.
+
+-- year - 2021, croma in India
+-- month
+-- product name
+-- variant
+-- gross price per item
+-- sold quantity
+-- gross price total
+
+Ans.
+
+--Table Required to join to get the data
+--fact_sales_monthly
+--fact_gross_price
+--dim_product
+
+SELECT 
+    get_fiscal_quarter(date) AS fiscal_quarter,
+    MONTHNAME(DATE_ADD(date, INTERVAL 4 MONTH)) AS fiscal_month,
+    dp.product_code,
+    dp.product,
+    dp.variant,
+    fgp.gross_price,
+    fsm.sold_quantity,
+    ROUND((fgp.gross_price * fsm.sold_quantity), 2) AS gross_price_total
+FROM dim_product AS dp
+LEFT JOIN fact_sales_monthly AS fsm USING (product_code)
+LEFT JOIN fact_gross_price AS fgp 
+    ON fgp.product_code = fsm.product_code 
+    AND fgp.fiscal_year = get_fiscal_year(date)
+WHERE get_fiscal_year(date) = 2021 
+    AND fsm.customer_code = 90002002;
