@@ -1,5 +1,7 @@
 Que. Monthly Gross Sales Report for Croma.
 
+Ans.
+
 SELECT 
     fsm.date,
     ROUND(SUM(fgp.gross_price * fsm.sold_quantity), 2) AS gross_price_total
