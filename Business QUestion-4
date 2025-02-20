@@ -1,0 +1,32 @@
+Que. Determine the year-over-year change in forecast accuracy from 2020 to 2021 for each customer.
+
+WITH cte1 AS (
+    SELECT 
+        customer_code,
+        customer,
+        market,
+        forecast_accuracy AS forecast_accuracy_2020
+    FROM forecast_acc_table
+    WHERE fiscal_year = 2020
+), 
+
+cte2 AS (
+    SELECT 
+        customer_code,
+        customer,
+        market,
+        forecast_accuracy AS forecast_accuracy_2021
+    FROM forecast_acc_table
+    WHERE fiscal_year = 2021
+)
+
+SELECT 
+    cte1.customer_code,
+    cte1.customer,
+    cte1.market,
+    cte1.forecast_accuracy_2020,
+    cte2.forecast_accuracy_2021,
+    (cte2.forecast_accuracy_2021 - cte1.forecast_accuracy_2020) AS forecast_chg_2020_2021
+FROM cte1 
+JOIN cte2 
+    USING (customer_code, customer, market);
